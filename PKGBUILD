@@ -7,7 +7,13 @@ pkgdesc="MacOS Big Sur theme for KDE Plasma"
 arch=('x86_64')
 url="https://github.com/vinceliuice/${_gitname}"
 license=('GPL-3.0')
-optdepends=(kvantum)
+optdepends=('kvantum: Kvantum theme support'
+            'sddm: SDDM theme support'
+            'whitesur-icon-theme: Whitesur icon theme'
+            'whitesur-cursor-theme: Whitesur cursor theme')
+provides=('kvantum-theme-whitesur'
+          'whitesur-kvantum-theme'
+          'plasma5-themes-whitesur')
 source=("${pkgname}-${pkgver//./-}.tar.gz::${url}/archive/refs/tags/${pkgver//./-}.tar.gz")
 sha256sums=('8ab21920e8df0647431b7f23ace7f9a7a51b320263f4364ac286bae1a359e91a')
 
@@ -20,10 +26,20 @@ package() {
   _kvantum_dir="${pkgdir}/usr/share/Kvantum"
   _wallpaper_dir="${pkgdir}/usr/share/wallpapers"
   _src_extract="${srcdir}/${_gitname}-${pkgver//./-}"
-  _pcolors=("" "-alt" "-dark")
-  _lights=("${_gitname%-kde}" "${_gitname//kde/sharp}" "${_gitname//kde/opaque}")
-  _darks=("${_gitname//kde/dark}" "${_gitname//kde/dark-sharp}" "${_gitname//kde/dark-opaque}")
-  _scales=("" "_x1.25" "_x1.5" "_x1.75" "_x2.0")
+  _pcolors=(""
+            "-alt"
+            "-dark")
+  _lights=("${_gitname%-kde}"
+           "${_gitname//kde/sharp}"
+           "${_gitname//kde/opaque}")
+  _darks=("${_gitname//kde/dark}"
+          "${_gitname//kde/dark-sharp}"
+          "${_gitname//kde/dark-opaque}")
+  _scales=(""
+           "_x1.25"
+           "_x1.5"
+           "_x1.75"
+           "_x2.0")
   _aurorae_light_names=()
   _aurorae_dark_names=()
 
@@ -65,6 +81,7 @@ package() {
       "${_aurorae_dir}/${_aurorae_light_name}/metadata.desktop" \
       "${_aurorae_dir}/${_aurorae_light_name}/metadata.json"
   done
+
   for _aurorae_dark_name in "${_aurorae_dark_names[@]}"; do
     cp -r "${_src_extract}/aurorae/common/assets-dark/"* "${_aurorae_dir}/${_aurorae_dark_name}"
     cp -r "${_src_extract}/aurorae/"{metadata.desktop,metadata.json} "${_aurorae_dir}/${_aurorae_dark_name}"
