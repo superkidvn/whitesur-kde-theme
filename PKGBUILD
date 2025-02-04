@@ -16,6 +16,10 @@ optdepends=(
 provides=(
   'kvantum-theme-whitesur'
   'whitesur-kvantum-theme'
+)
+conflicts=(
+  'kvantum-theme-whitesur'
+  'whitesur-kvantum-theme'
   'plasma5-themes-whitesur'
 )
 source=("${pkgname}-${pkgver//./-}.tar.gz::${url}/archive/refs/tags/${pkgver//./-}.tar.gz")
@@ -29,6 +33,7 @@ package() {
   _lookfeeldir="${pkgdir}/usr/share/plasma/look-and-feel"
   _kvantumdir="${pkgdir}/usr/share/Kvantum"
   _wallpaperdir="${pkgdir}/usr/share/wallpapers"
+  _sddmdir="${pkgdir}/usr/share/sddm/themes"
   _extractdir="${srcdir}/${_gitname}-${pkgver//./-}"
   _pcolors=(
     ""
@@ -71,7 +76,8 @@ package() {
     "${_plasmadir}" \
     "${_lookfeeldir}" \
     "${_kvantumdir}" \
-    "${_wallpaperdir}"
+    "${_wallpaperdir}" \
+    "${_sddmdir}"
  
  # Install Kvantum theme and wallpaper
   cp -r "${_extractdir}/Kvantum/"* "${_kvantumdir}"
@@ -105,6 +111,17 @@ package() {
 
   # Clean up redundant aurorae rc files
   rm -f "${_auroraedir}/${_gitname%-kde}"*rc
+
+  # Install sddm theme
+  for i in {"-light","-dark"}; do
+    cp -r "${_extractdir}/sddm/${_gitname%-kde}-6.2" "${_sddmdir}/${_gitname%-kde}${i}"
+    cp -r "${_extractdir}/sddm/images/background$i.jpeg" "${_sddmdir}/${_gitname%-kde}${i}/background.jpeg"
+    cp -r "${_extractdir}/sddm/images/preview$i.jpeg" "${_sddmdir}/${_gitname%-kde}${i}/preview.jpeg"
+
+    sed -i "/\Name=/s/${_gitname%-kde}/${_gitname%-kde}${i}/" "${_sddmdir}/${_gitname%-kde}${i}/metadata.desktop"
+    sed -i "/\Theme-Id=/s/${_gitname%-kde}/${_gitname%-kde}${i}/" "${_sddmdir}/${_gitname%-kde}${i}/metadata.desktop"
+    sed -i "s/${_gitname%-kde}/${_gitname%-kde}${i}/g" "${_sddmdir}/${_gitname%-kde}${i}/Main.qml"
+  done
 
   # Install license
   install -Dm0644 -t "${pkgdir}/usr/share/licenses/${pkgname}" "${_extractdir}/LICENSE" 
