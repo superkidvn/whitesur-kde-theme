@@ -7,39 +7,51 @@ pkgdesc="MacOS Big Sur theme for KDE Plasma"
 arch=('x86_64')
 url="https://github.com/vinceliuice/${_gitname}"
 license=('GPL-3.0')
-optdepends=('kvantum: Kvantum theme support'
-            'sddm: SDDM theme support'
-            'whitesur-icon-theme: Whitesur icon theme'
-            'whitesur-cursor-theme: Whitesur cursor theme')
-provides=('kvantum-theme-whitesur'
-          'whitesur-kvantum-theme'
-          'plasma5-themes-whitesur')
+optdepends=(
+  'kvantum: Kvantum theme support'
+  'sddm: SDDM theme support'
+  'whitesur-icon-theme: Whitesur icon theme'
+  'whitesur-cursor-theme: Whitesur cursor theme'
+)
+provides=(
+  'kvantum-theme-whitesur'
+  'whitesur-kvantum-theme'
+  'plasma5-themes-whitesur'
+)
 source=("${pkgname}-${pkgver//./-}.tar.gz::${url}/archive/refs/tags/${pkgver//./-}.tar.gz")
 sha256sums=('8ab21920e8df0647431b7f23ace7f9a7a51b320263f4364ac286bae1a359e91a')
 
 package() {
   # Variables
-  _aurorae_dir="${pkgdir}/usr/share/aurorae/themes"
-  _schemes_dir="${pkgdir}/usr/share/color-schemes"
-  _plasma_dir="${pkgdir}/usr/share/plasma/desktoptheme"
-  _lookfeel_dir="${pkgdir}/usr/share/plasma/look-and-feel"
-  _kvantum_dir="${pkgdir}/usr/share/Kvantum"
-  _wallpaper_dir="${pkgdir}/usr/share/wallpapers"
-  _src_extract="${srcdir}/${_gitname}-${pkgver//./-}"
-  _pcolors=(""
-            "-alt"
-            "-dark")
-  _lights=("${_gitname%-kde}"
-           "${_gitname//kde/sharp}"
-           "${_gitname//kde/opaque}")
-  _darks=("${_gitname//kde/dark}"
-          "${_gitname//kde/dark-sharp}"
-          "${_gitname//kde/dark-opaque}")
-  _scales=(""
-           "_x1.25"
-           "_x1.5"
-           "_x1.75"
-           "_x2.0")
+  _auroraedir="${pkgdir}/usr/share/aurorae/themes"
+  _schemesdir="${pkgdir}/usr/share/color-schemes"
+  _plasmadir="${pkgdir}/usr/share/plasma/desktoptheme"
+  _lookfeeldir="${pkgdir}/usr/share/plasma/look-and-feel"
+  _kvantumdir="${pkgdir}/usr/share/Kvantum"
+  _wallpaperdir="${pkgdir}/usr/share/wallpapers"
+  _extractdir="${srcdir}/${_gitname}-${pkgver//./-}"
+  _pcolors=(
+    ""
+    "-alt"
+    "-dark"
+  )
+  _lights=(
+    "${_gitname%-kde}"
+    "${_gitname//kde/sharp}"
+    "${_gitname//kde/opaque}"
+  )
+  _darks=(
+    "${_gitname//kde/dark}"
+    "${_gitname//kde/dark-sharp}"
+    "${_gitname//kde/dark-opaque}"
+  )
+  _scales=(
+    ""
+    "_x1.25"
+    "_x1.5"
+    "_x1.75"
+    "_x2.0"
+  )
   _aurorae_light_names=()
   _aurorae_dark_names=()
 
@@ -54,46 +66,46 @@ package() {
 
   # Create directories
   install -d \
-    "${_aurorae_dir}" \
-    "${_schemes_dir}" \
-    "${_plasma_dir}" \
-    "${_lookfeel_dir}" \
-    "${_kvantum_dir}" \
-    "${_wallpaper_dir}"
+    "${_auroraedir}" \
+    "${_schemesdir}" \
+    "${_plasmadir}" \
+    "${_lookfeeldir}" \
+    "${_kvantumdir}" \
+    "${_wallpaperdir}"
  
  # Install Kvantum theme and wallpaper
-  cp -r "${_src_extract}/Kvantum/"* "${_kvantum_dir}"
-  cp -r "${_src_extract}/wallpaper/"* "${_wallpaper_dir}"
+  cp -r "${_extractdir}/Kvantum/"* "${_kvantumdir}"
+  cp -r "${_extractdir}/wallpaper/"* "${_wallpaperdir}"
 
   # Install plasma theme and color scheme
-  cp -r "${_src_extract}/color-schemes/"* "${_schemes_dir}"
-  cp -r "${_src_extract}/plasma/desktoptheme/${_gitname%-kde}"* "${_plasma_dir}"
-  cp -r "${_src_extract}/plasma/look-and-feel/"* "${_lookfeel_dir}"
+  cp -r "${_extractdir}/color-schemes/"* "${_schemesdir}"
+  cp -r "${_extractdir}/plasma/desktoptheme/${_gitname%-kde}"* "${_plasmadir}"
+  cp -r "${_extractdir}/plasma/look-and-feel/"* "${_lookfeeldir}"
 
   # Install aurorae
-  cp -r "${_src_extract}/aurorae/"{main,main-opaque,main-sharp}/* "${_aurorae_dir}"
+  cp -r "${_extractdir}/aurorae/"{main,main-opaque,main-sharp}/* "${_auroraedir}"
 
   for _aurorae_light_name in "${_aurorae_light_names[@]}"; do
-    cp -r "${_src_extract}/aurorae/common/assets/"* "${_aurorae_dir}/${_aurorae_light_name}"
-    cp -r "${_src_extract}/aurorae/"{metadata.desktop,metadata.json} "${_aurorae_dir}/${_aurorae_light_name}"
-    cp -r "${_aurorae_dir}/${_aurorae_light_name%_x*}rc" "${_aurorae_dir}/${_aurorae_light_name}"
+    cp -r "${_extractdir}/aurorae/common/assets/"* "${_auroraedir}/${_aurorae_light_name}"
+    cp -r "${_extractdir}/aurorae/"{metadata.desktop,metadata.json} "${_auroraedir}/${_aurorae_light_name}"
+    cp -r "${_auroraedir}/${_aurorae_light_name%_x*}rc" "${_auroraedir}/${_aurorae_light_name}"
     sed -i "s/${_gitname%-kde}/${_aurorae_light_name}/g" \
-      "${_aurorae_dir}/${_aurorae_light_name}/metadata.desktop" \
-      "${_aurorae_dir}/${_aurorae_light_name}/metadata.json"
+      "${_auroraedir}/${_aurorae_light_name}/metadata.desktop" \
+      "${_auroraedir}/${_aurorae_light_name}/metadata.json"
   done
 
   for _aurorae_dark_name in "${_aurorae_dark_names[@]}"; do
-    cp -r "${_src_extract}/aurorae/common/assets-dark/"* "${_aurorae_dir}/${_aurorae_dark_name}"
-    cp -r "${_src_extract}/aurorae/"{metadata.desktop,metadata.json} "${_aurorae_dir}/${_aurorae_dark_name}"
-    cp -r "${_aurorae_dir}/${_aurorae_dark_name%_x*}rc" "${_aurorae_dir}/${_aurorae_dark_name}"
+    cp -r "${_extractdir}/aurorae/common/assets-dark/"* "${_auroraedir}/${_aurorae_dark_name}"
+    cp -r "${_extractdir}/aurorae/"{metadata.desktop,metadata.json} "${_auroraedir}/${_aurorae_dark_name}"
+    cp -r "${_auroraedir}/${_aurorae_dark_name%_x*}rc" "${_auroraedir}/${_aurorae_dark_name}"
     sed -i "s/${_gitname%-kde}/${_aurorae_dark_name}/g" \
-      "${_aurorae_dir}/${_aurorae_dark_name}/metadata.desktop" \
-      "${_aurorae_dir}/${_aurorae_dark_name}/metadata.json"
+      "${_auroraedir}/${_aurorae_dark_name}/metadata.desktop" \
+      "${_auroraedir}/${_aurorae_dark_name}/metadata.json"
   done
 
   # Clean up redundant aurorae rc files
-  rm -f "${_aurorae_dir}/${_gitname%-kde}"*rc
+  rm -f "${_auroraedir}/${_gitname%-kde}"*rc
 
   # Install license
-  install -Dm0644 -t "${pkgdir}/usr/share/licenses/${pkgname}" "${_src_extract}/LICENSE" 
+  install -Dm0644 -t "${pkgdir}/usr/share/licenses/${pkgname}" "${_extractdir}/LICENSE" 
 }
