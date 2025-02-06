@@ -1,0 +1,7 @@
+post_install() {
+  cat<<EOF
+
+Install kvantum and sddm to use the included Kvantum theme and sddm theme.
+
+EOF
+}

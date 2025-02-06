@@ -2,9 +2,9 @@
 pkgname=whitesur-kde-theme
 _gitname=WhiteSur-kde
 pkgver=2024.11.18
-pkgrel=1
+pkgrel=2
 pkgdesc="MacOS Big Sur theme for KDE Plasma"
-arch=('x86_64')
+arch=(any)
 url="https://github.com/vinceliuice/${_gitname}"
 license=('GPL-3.0')
 optdepends=(
@@ -22,6 +22,7 @@ conflicts=(
   'whitesur-kvantum-theme'
   'plasma5-themes-whitesur'
 )
+install=post_install.install
 source=("${pkgname}-${pkgver//./-}.tar.gz::${url}/archive/refs/tags/${pkgver//./-}.tar.gz")
 sha256sums=('8ab21920e8df0647431b7f23ace7f9a7a51b320263f4364ac286bae1a359e91a')
 
@@ -94,7 +95,7 @@ package() {
   for _aurorae_light_name in "${_aurorae_light_names[@]}"; do
     cp -r "${_extractdir}/aurorae/common/assets/"* "${_auroraedir}/${_aurorae_light_name}"
     cp -r "${_extractdir}/aurorae/"{metadata.desktop,metadata.json} "${_auroraedir}/${_aurorae_light_name}"
-    cp -r "${_auroraedir}/${_aurorae_light_name%_x*}rc" "${_auroraedir}/${_aurorae_light_name}"
+    cp -r "${_auroraedir}/${_aurorae_light_name%_x*}rc" "${_auroraedir}/${_aurorae_light_name}/${_aurorae_light_name}rc"
     sed -i "s/${_gitname%-kde}/${_aurorae_light_name}/g" \
       "${_auroraedir}/${_aurorae_light_name}/metadata.desktop" \
       "${_auroraedir}/${_aurorae_light_name}/metadata.json"
@@ -103,7 +104,7 @@ package() {
   for _aurorae_dark_name in "${_aurorae_dark_names[@]}"; do
     cp -r "${_extractdir}/aurorae/common/assets-dark/"* "${_auroraedir}/${_aurorae_dark_name}"
     cp -r "${_extractdir}/aurorae/"{metadata.desktop,metadata.json} "${_auroraedir}/${_aurorae_dark_name}"
-    cp -r "${_auroraedir}/${_aurorae_dark_name%_x*}rc" "${_auroraedir}/${_aurorae_dark_name}"
+    cp -r "${_auroraedir}/${_aurorae_dark_name%_x*}rc" "${_auroraedir}/${_aurorae_dark_name}/${_aurorae_dark_name}rc"
     sed -i "s/${_gitname%-kde}/${_aurorae_dark_name}/g" \
       "${_auroraedir}/${_aurorae_dark_name}/metadata.desktop" \
       "${_auroraedir}/${_aurorae_dark_name}/metadata.json"
